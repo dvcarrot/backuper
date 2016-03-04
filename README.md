@@ -2,6 +2,7 @@
 Php Mysql Backuper
 
 ## example
+	use dvcarrot\backuper\Backuper;
     $backuper = new Backuper(array(
     	'database' => 'my_database',
     	'username' => 'my_username',

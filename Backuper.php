@@ -1,3 +1,6 @@
+<?php
+namespace dvcarrot\backuper;
+
 class Backuper
 {
 	protected $database;
@@ -11,9 +14,7 @@ class Backuper
 		$available = array('database', 'username', 'hostname', 'password');
 		foreach($available as $key) {
 			if (!array_key_exists($key, $params))
-				throw new ArgumentException(sprintf('Empty parameter "%s"', $key));
-			elseif(empty($params[$key]))
-				throw new ArgumentException(sprintf('Empty parameter "%s"', $key));
+				$this->error(sprintf('Empty parameter "%s"', $key));
 			else
 				$this->$key = $params[$key];
 		}
@@ -71,7 +72,7 @@ class Backuper
 
 	protected function showTables()
 	{
-		return mysql_list_tables($this->database);
+		return $this->query("SHOW TABLES");
 	}
 	
 	protected function fetch($result)
@@ -95,6 +96,9 @@ class Backuper
 	
 	protected function error($message)
 	{
-		die($message . ': '.mysql_error());
+		$error = mysql_error();
+		if ($error)
+			$message .= ': '. $error;
+		die($message);
 	}
 }
